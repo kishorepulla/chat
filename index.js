@@ -1,6 +1,9 @@
 var app = require('express')();
-var io = require('socket.io').listen(app.listen(3000, function(){
-  console.log('listening on *:3000');
+app.set('port', (process.env.PORT || 5000));
+app.use(express.static(__dirname));
+
+var io = require('socket.io').listen(app.listen(app.get('port'), function(){
+  console.log('listening on ' + app.get('port'));
 }));
 
 var messages_ = [];
