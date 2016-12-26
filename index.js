@@ -1,28 +1,22 @@
-var express = require('express')
-var app = express.createServer();
-app.set('port', (process.env.PORT || 5000));
+var express = require('express');
+var app = express();
 app.use(express.static(__dirname));
 
-var io = require('socket.io').listen(app);
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+	
+server.listen(process.env.PORT || 3000);
 
-io.configure(function () {  
-  io.set("transports", ["xhr-polling"]); 
-  io.set("polling duration", 10); 
-});
-
-app.listen(app.get('port'), function(){
-  console.log('listening on ' + app.get('port'));
-});
 
 var messages_ = [];
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
+io.sockets.on('connection', function(socket){
 	socket.emit('init messages', messages_);
-  socket.on('chat message', function(msg){
+	socket.on('chat message', function(msg){
 	messages_.push(msg);
-    io.emit('chat message', msg);
-  });
+	io.emit('chat message', msg);
+	});
 });
