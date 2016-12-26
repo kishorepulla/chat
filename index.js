@@ -3,13 +3,15 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname));
 
-var io = require('socket.io').listen(app.listen(app.get('port'), function(){
-  console.log('listening on ' + app.get('port'));
-}));
+var io = require('socket.io').listen(app);
 
 io.configure(function () {  
   io.set("transports", ["xhr-polling"]); 
   io.set("polling duration", 10); 
+});
+
+app.listen(app.get('port'), function(){
+  console.log('listening on ' + app.get('port'));
 });
 
 var messages_ = [];
