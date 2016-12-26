@@ -7,6 +7,11 @@ var io = require('socket.io').listen(app.listen(app.get('port'), function(){
   console.log('listening on ' + app.get('port'));
 }));
 
+io.configure(function () {  
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
+
 var messages_ = [];
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
